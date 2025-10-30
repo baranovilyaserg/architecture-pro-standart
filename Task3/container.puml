@@ -1,0 +1,44 @@
+@startuml
+title Standart Container Diagram
+
+top to bottom direction
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+Person(user, "User", "A user of the system standart")
+Person(worker, "Worker", "A worker of the system standart")
+Person(callcenterman, "Call center man", "Support clients and work with system")
+
+System(StandartSystem, "Standart System", "System provide functionality standart bank")
+
+Container_Boundary(StandartSystem, "Standart System") {
+  Container(WebApp, "Web Application", "PHP, React.js", "Handles user interactions")
+  Container(InternetBank, "Internet bank system", "ASP.NET MVC 4.5, MS SQL", "Internet bank backend")
+  Container(ABS, "ABS system", "Java, Python", "Auto bank system provide all functionality bank")
+  Container(CreditСonveyor, "Credit Conveyor", "Java, Python", "Functionality credit")
+  Container(CreditScoringSystem, "Credit scoring system", "Comund, Oracle", "The system determines the client's rating for issuing him a loan")
+  Container(InternalCallCenter, "Internal call center", "React.js, Java Spring Boot, PostgreSQL", "Internal call center system")
+  Container(SMSGateWayProvider, "SMS gateway provider", "Java, Spring", "Provide ext sms provider")
+}
+
+System_Ext(ExtSMSGateWay, "SMS gate way service ext", "External sms gateway system")
+System_Ext(ExtCreditBureau, "Credit bureau ext", "External credit bureau system")
+System_Ext(ExtCallCenterSystem, "Call center system ext", "External call center system")
+
+Rel(user, WebApp, "Uses the system")
+Rel(user, InternetBank, "Uses the system")
+Rel(callcenterman, ExtCallCenterSystem, "Work with call center")
+Rel(callcenterman, InternalCallCenter, "Work with call center")
+Rel(callcenterman, user, "Support")
+Rel(worker, user, "Work with user")
+Rel(worker, ABS, "Work with the system")
+Rel(worker, CreditСonveyor, "Credit Requests")
+Rel(worker, CreditScoringSystem, "Credit scoring")
+
+Rel(WebApp, ABS, "Requests to internal bank system")
+Rel(InternetBank, ABS, "Requests to internal bank system")
+Rel(ABS, CreditСonveyor, "Requests to internal bank system")
+Rel(ABS, SMSGateWayProvider, "Send sms notify")
+Rel(SMSGateWayProvider, ExtSMSGateWay, "Send sms message")
+Rel(CreditСonveyor, ExtCreditBureau, "Request credit history")
+@enduml

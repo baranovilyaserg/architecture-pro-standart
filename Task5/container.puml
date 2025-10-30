@@ -1,0 +1,41 @@
+@startuml
+title StandartCredit Container Diagram
+
+top to bottom direction
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+Person(user, "User", "A user of the system standart")
+
+
+System(StandartSystem, "Standart System", "System provide functionality standart bank")
+
+Container_Boundary(StandartSystem, "Standart System") {
+  Container(WebApp, "Web Application", "PHP, React.js", "Handles user interactions")
+  Container(ABS, "ABS system", "Java, Python", "Auto bank system provide all functionality bank")
+  Container(CreditСonveyor, "Credit Conveyor", "Java, Python", "Functionality credit")
+  Container(CreditScoringSystem, "Credit scoring system", "Comund, Oracle", "The system determines the client's rating for issuing him a loan")
+  Container(InternetBank, "Internet bank system", "ASP.NET MVC 4.5, MS SQL", "Internet bank backend")
+  Container(SMSGateWayProvider, "SMS gateway provider", "Java, Spring", "Internet bank system")
+  Container(CreditContainer, "Credit Container", "Java, Spring", "Credit functionality")
+}
+
+System_Ext(ExtSMSGateWay, "SMS gate way service ext", "External sms gateway system")
+System_Ext(ExtCreditBureau, "Credit bureau ext", "External credit bureau system")
+
+Rel(user, WebApp, "Uses the system to get credit")
+Rel(user, InternetBank, "Uses the system to get credit")
+
+Rel(WebApp, CreditContainer, "Requests credit")
+Rel(InternetBank, CreditContainer, "Requests credit")
+
+Rel(CreditContainer, CreditScoringSystem, "Requests credit scoring")
+Rel(CreditContainer, ABS, "Requests credit")
+Rel(CreditContainer, SMSGateWayProvider, "Send sms credit notify")
+Rel(CreditContainer, CreditСonveyor, "Requests credit history and start credit conveyor")
+
+Rel(ABS, CreditСonveyor, "Sync db")
+
+Rel(SMSGateWayProvider, ExtSMSGateWay, "Send sms message")
+Rel(CreditСonveyor, ExtCreditBureau, "Request credit history")
+@enduml

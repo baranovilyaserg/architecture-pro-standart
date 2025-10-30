@@ -1,0 +1,17 @@
+@startuml
+title Standart Context Diagram
+
+top to bottom direction
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+Person(client, "Client", "A client of the standart bank")
+ 
+System(StandartBankSystem, "Standart Bank System", "Bank functionality credits")
+
+System_Ext(ExtSMSSystem, "Ext sms system", "External sms system")
+
+Rel(client, StandartBankSystem, "Uses the system to get credit")
+Rel(StandartBankSystem, ExtSMSSystem, "Send notify")
+Rel(ExtSMSSystem, client, "Send notify")
+@enduml
