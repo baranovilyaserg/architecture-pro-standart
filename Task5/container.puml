@@ -11,13 +11,29 @@ Person(user, "User", "A user of the system standart")
 System(StandartSystem, "Standart System", "System provide functionality standart bank")
 
 Container_Boundary(StandartSystem, "Standart System") {
+
+System_Boundary(CreditSystemFront, "Credit System front") {
   Container(WebApp, "Web Application", "PHP, React.js", "Handles user interactions")
+  Container(InternetBank, "Internet bank system", "ASP.NET MVC 4.5, MS SQL", "Internet bank backend")
+ }
+ 
+  Container(ServiceMesh, "Service Mesh", "Custom, istio", "Service Mesh")
+ 
+  Container(ABSAdapter, "ABS system adapter", "Java, Python", "Adapter to ABC System")
   Container(ABS, "ABS system", "Java, Python", "Auto bank system provide all functionality bank")
+  
+  Container(CreditContainer, "Credit Container", "Java, Spring", "Handle credit requests")
+  Container(CreditSystemAdapter, "Credit System Adapter", "Java, Spring", "Adater credit system")
+  System_Boundary(CreditSystem, "Credit System") {
   Container(CreditСonveyor, "Credit Conveyor", "Java, Python", "Functionality credit")
   Container(CreditScoringSystem, "Credit scoring system", "Comund, Oracle", "The system determines the client's rating for issuing him a loan")
-  Container(InternetBank, "Internet bank system", "ASP.NET MVC 4.5, MS SQL", "Internet bank backend")
+}
+
   Container(SMSGateWayProvider, "SMS gateway provider", "Java, Spring", "Internet bank system")
-  Container(CreditContainer, "Credit Container", "Java, Spring", "Credit functionality")
+  Container(ExtCreditBureauAdapter, "ExtCreditBureauAdapter", "Java, Spring", "Adater credit bureau")
+  
+  Container(RabbitMqNotify, "Rabbit MQ notify broker", "RabbitMQ", "Handle notify")
+  Container(NotifyContainer, "Notify Container", "Java, Spring", "Handle notify, send front")
 }
 
 System_Ext(ExtSMSGateWay, "SMS gate way service ext", "External sms gateway system")
@@ -26,16 +42,29 @@ System_Ext(ExtCreditBureau, "Credit bureau ext", "External credit bureau system"
 Rel(user, WebApp, "Uses the system to get credit")
 Rel(user, InternetBank, "Uses the system to get credit")
 
-Rel(WebApp, CreditContainer, "Requests credit")
-Rel(InternetBank, CreditContainer, "Requests credit")
+Rel(WebApp, ServiceMesh, "Requests credit, REST API")
+Rel(InternetBank, ServiceMesh, "Requests credit, REST API")
 
-Rel(CreditContainer, CreditScoringSystem, "Requests credit scoring")
-Rel(CreditContainer, ABS, "Requests credit")
-Rel(CreditContainer, SMSGateWayProvider, "Send sms credit notify")
-Rel(CreditContainer, CreditСonveyor, "Requests credit history and start credit conveyor")
+Rel(ServiceMesh, CreditContainer, "Requests credit, REST API")
+
+Rel(CreditContainer, CreditSystemAdapter, "Requests credit scoring, REST API")
+Rel(CreditContainer, CreditSystemAdapter, "Requests start credit conveyor, REST API")
+Rel(CreditSystemAdapter, CreditScoringSystem, "Requests credit scoring")
+Rel(CreditSystemAdapter, CreditСonveyor, "Requests start credit conveyor")
+
+Rel(CreditContainer, RabbitMqNotify, "Send notify")
+Rel(NotifyContainer, RabbitMqNotify, "Read notify")
+Rel(NotifyContainer, CreditSystemFront, "Send notify to user")
+
+Rel(CreditContainer, ABSAdapter, "Requests credit, REST API")
+Rel(ABSAdapter, ABS, "Convert and send requests")
+
+Rel(CreditContainer, SMSGateWayProvider, "Send sms credit notify, REST API")
+Rel(SMSGateWayProvider, ExtSMSGateWay, "Send sms message")
+Rel(ExtSMSGateWay, user, "Send sms messages")
 
 Rel(ABS, CreditСonveyor, "Sync db")
 
-Rel(SMSGateWayProvider, ExtSMSGateWay, "Send sms message")
-Rel(CreditСonveyor, ExtCreditBureau, "Request credit history")
+Rel(CreditContainer, ExtCreditBureauAdapter, "Request credit history, REST API")
+Rel(ExtCreditBureauAdapter, ExtCreditBureau, "Request credit history")
 @enduml

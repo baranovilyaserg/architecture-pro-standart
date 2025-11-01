@@ -15,8 +15,10 @@ Container_Boundary(StandartSystem, "Standart System") {
   Container(WebApp, "Web Application", "PHP, React.js", "Handles user interactions")
   Container(InternetBank, "Internet bank system", "ASP.NET MVC 4.5, MS SQL", "Internet bank backend")
   Container(ABS, "ABS system", "Java, Python", "Auto bank system provide all functionality bank")
+System_Boundary(CreditSystem, "Credit System") {
   Container(CreditСonveyor, "Credit Conveyor", "Java, Python", "Functionality credit")
   Container(CreditScoringSystem, "Credit scoring system", "Comund, Oracle", "The system determines the client's rating for issuing him a loan")
+}
   Container(InternalCallCenter, "Internal call center", "React.js, Java Spring Boot, PostgreSQL", "Internal call center system")
   Container(SMSGateWayProvider, "SMS gateway provider", "Java, Spring", "Provide ext sms provider")
 }
@@ -31,14 +33,14 @@ Rel(callcenterman, ExtCallCenterSystem, "Work with call center")
 Rel(callcenterman, InternalCallCenter, "Work with call center")
 Rel(callcenterman, user, "Support")
 Rel(worker, user, "Work with user")
-Rel(worker, ABS, "Work with the system")
+Rel(worker, ABS, "Work with the system, deposit, Excel file, email")
 Rel(worker, CreditСonveyor, "Credit Requests")
-Rel(worker, CreditScoringSystem, "Credit scoring")
+Rel(worker, CreditScoringSystem, "Credit scoring, Excel file, email")
 
-Rel(WebApp, ABS, "Requests to internal bank system")
-Rel(InternetBank, ABS, "Requests to internal bank system")
-Rel(ABS, CreditСonveyor, "Requests to internal bank system")
-Rel(ABS, SMSGateWayProvider, "Send sms notify")
-Rel(SMSGateWayProvider, ExtSMSGateWay, "Send sms message")
-Rel(CreditСonveyor, ExtCreditBureau, "Request credit history")
+Rel(WebApp, ABS, "Requests to internal bank system, REST API")
+Rel(InternetBank, ABS, "Requests to internal bank system, REST API")
+Rel(ABS, CreditСonveyor, "Requests to internal bank system, REST API")
+Rel(ABS, SMSGateWayProvider, "Send sms notify, REST API")
+Rel(SMSGateWayProvider, ExtSMSGateWay, "Send sms message, REST API")
+Rel(CreditСonveyor, ExtCreditBureau, "Request credit history, REST API")
 @enduml

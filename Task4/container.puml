@@ -13,7 +13,7 @@ System(StandartSystem, "Standart System", "System provide functionality standart
 Container_Boundary(StandartSystem, "Standart System") {
 
   Container(ABS, "ABS system", "Java, Python", "Auto bank system provide all functionality bank")
-  Container(ActualBetContainer, "Actual bet container", "Java, Python", "Functionality actual bet")
+  Container(ActualBetContainer, "Actual bet container", "Java, Python", "Functionality actual bet, stores bets in local db, configure file to ext systems")
   Container(EmailGateWay, "Enail gateway system", "Java, Python", "Provide external email system")
   Container(InternalCallCenter, "Internal call center", "React.js, Java Spring Boot, PostgreSQL", "Internal call center system")
 }
@@ -25,7 +25,7 @@ Rel(callcenterman, ExtCallCenterSystem, "Work with call center")
 Rel(callcenterman, InternalCallCenter, "Work with call center")
 
 Rel(ActualBetContainer, ABS, "Requests to internal bank system for actual bet")
-Rel(InternalCallCenter, ActualBetContainer, "Requests actual bet")
+Rel(ActualBetContainer, InternalCallCenter, "Send actual bet")
 Rel(ActualBetContainer, EmailGateWay, "Sends actual bet")
 Rel(EmailGateWay, ExtEmailSystem, "Send email messages")
 Rel(ExtEmailSystem, ExtCallCenterSystem, "Send email messages")
