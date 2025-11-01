@@ -1,0 +1,18 @@
+@startuml
+title Standart Context Diagram
+
+top to bottom direction
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+Person(callcenterman, "CallCenterMan", "A worker of the ext call center")
+ 
+System(StandartBankSystem, "Standart Bank System", "Bank functionality deposit and credits")
+
+System_Ext(ExtCallCenter, "Ext call center system", "External call center system")
+System_Ext(ExtEmailSystem, "Ext email system", "External email system")
+
+Rel(callcenterman,ExtCallCenter,"Work with system")
+Rel(StandartBankSystem,ExtEmailSystem,"Send actual bet")
+Rel(ExtEmailSystem,ExtCallCenter,"Send email messages")
+@enduml

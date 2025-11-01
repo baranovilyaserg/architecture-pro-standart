@@ -1,0 +1,32 @@
+@startuml
+title Standart actual bet Container Diagram
+
+top to bottom direction
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+
+Person(callcenterman, "Call center man", "Support clients and work with system")
+
+System(StandartSystem, "Standart System", "System provide functionality standart bank")
+
+Container_Boundary(StandartSystem, "Standart System") {
+
+  Container(ABS, "ABS system", "Java, Python", "Auto bank system provide all functionality bank")
+  Container(ActualBetContainer, "Actual bet container", "Java, Python", "Functionality actual bet, stores bets in local db, configure file to ext systems")
+  Container(EmailGateWay, "Enail gateway system", "Java, Python", "Provide external email system")
+  Container(InternalCallCenter, "Internal call center", "React.js, Java Spring Boot, PostgreSQL", "Internal call center system")
+}
+
+System_Ext(ExtCallCenterSystem, "Call center system ext", "External call center system")
+System_Ext(ExtEmailSystem, "Email system ext", "External email system")
+
+Rel(callcenterman, ExtCallCenterSystem, "Work with call center")
+Rel(callcenterman, InternalCallCenter, "Work with call center")
+
+Rel(ActualBetContainer, ABS, "Requests to internal bank system for actual bet")
+Rel(ActualBetContainer, InternalCallCenter, "Send actual bet")
+Rel(ActualBetContainer, EmailGateWay, "Sends actual bet")
+Rel(EmailGateWay, ExtEmailSystem, "Send email messages")
+Rel(ExtEmailSystem, ExtCallCenterSystem, "Send email messages")
+@enduml
